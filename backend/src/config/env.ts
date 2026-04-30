@@ -26,7 +26,7 @@ const validMsTime = Joi.string().custom(validateMsFormat, 'ms validation');
 
 const envSchema = Joi.object({
   PORT: Joi.number().default(3000),
-  DB_ADDRESS: Joi.string().required(),
+  DB_ADDRESS: Joi.string().default('mongodb://127.0.0.1:27017/weblarek'),
   UPLOAD_PATH: Joi.string().default('images'),
   UPLOAD_PATH_TEMP: Joi.string().default('temp'),
   ORIGIN_ALLOW: Joi.string().required(),

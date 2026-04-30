@@ -19,10 +19,20 @@ import startTempCleanup from './utils/cleanup-temp';
 const app = express();
 
 mongoose.connect(env.DB_ADDRESS)
-  // eslint-disable-next-line no-console
-  .then(() => console.log('MongoDB Connected'))
-  // eslint-disable-next-line no-console
-  .catch(console.error);
+  .then(() => {
+    // eslint-disable-next-line no-console
+    console.log('MongoDB Connected');
+
+    app.listen(env.PORT, () => {
+      // eslint-disable-next-line no-console
+      console.log(`Server started on port ${env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error('MongoDB connection error:', err);
+    // process.exit(1);
+  });
 
 app.use(cors({
   origin: env.ORIGIN_ALLOW,
@@ -39,8 +49,4 @@ app.use('/upload', uploadRouter);
 app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
-app.use(startTempCleanup);
-
-app.listen(env.PORT, () => {
-
-});
+startTempCleanup();
