@@ -18,26 +18,13 @@ import startTempCleanup from './utils/cleanup-temp';
 
 const app = express();
 
-mongoose.connect(env.DB_ADDRESS)
-  .then(() => {
-    // eslint-disable-next-line no-console
-    console.log('MongoDB Connected');
-
-    app.listen(env.PORT, () => {
-      // eslint-disable-next-line no-console
-      console.log(`Server started on port ${env.PORT}`);
-    });
-  })
-  .catch((err) => {
-    // eslint-disable-next-line no-console
-    console.error('MongoDB connection error:', err);
-    // process.exit(1);
-  });
-
+// 🔹 CORS с явным разрешением заголовка Authorization
 app.use(cors({
   origin: env.ORIGIN_ALLOW,
   credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
@@ -50,3 +37,17 @@ app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 startTempCleanup();
+
+mongoose.connect(env.DB_ADDRESS)
+  .then(() => {
+    // eslint-disable-next-line no-console
+    console.log('MongoDB Connected');
+  })
+  .catch((err) => {
+    // eslint-disable-next-line no-console
+    console.warn('MongoDB не запустился:', err.message);
+  });
+app.listen(env.PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Сервер запущен на порту ${env.PORT}`);
+});

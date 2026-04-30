@@ -26,13 +26,13 @@ const validMsTime = Joi.string().custom(validateMsFormat, 'ms validation');
 
 const envSchema = Joi.object({
   PORT: Joi.number().default(3000),
-  DB_ADDRESS: Joi.string().default('mongodb://127.0.0.1:27017/weblarek'),
+  DB_ADDRESS: Joi.string().default('mongodb://127.0.0.1:27017/weblarek'), // 👈 Обязательно default
   UPLOAD_PATH: Joi.string().default('images'),
   UPLOAD_PATH_TEMP: Joi.string().default('temp'),
-  ORIGIN_ALLOW: Joi.string().required(),
+  ORIGIN_ALLOW: Joi.string().default('http://localhost:5173'), // 👈 Добавь default
   AUTH_ACCESS_TOKEN_EXPIRY: validMsTime.default('10m'),
   AUTH_REFRESH_TOKEN_EXPIRY: validMsTime.default('7d'),
-  JWT_SECRET: Joi.string().min(16).required(),
+  JWT_SECRET: Joi.string().min(16).default('test-secret-key-for-ci-123456'), // 👈 Добавь default
 }).unknown(true);
 
 const { value, error } = envSchema.validate(process.env, { abortEarly: false });

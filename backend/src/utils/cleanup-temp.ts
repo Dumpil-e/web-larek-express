@@ -23,7 +23,6 @@ function startTempCleanup() {
       });
 
       const results = await Promise.all(deletePromises);
-      // ✅ Явная типизация аккумулятора
       const deletedCount = results.reduce<number>((acc, val) => acc + val, 0);
 
       if (deletedCount > 0) {
