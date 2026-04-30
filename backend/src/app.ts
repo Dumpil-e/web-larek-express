@@ -12,6 +12,7 @@ import {
   authRouter,
   uploadRouter,
 } from './routes';
+import NotFoundError from './errors/not-found-error';
 import errorHandler from './middlewares/error-handler';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import startTempCleanup from './utils/cleanup-temp';
@@ -33,6 +34,9 @@ app.use('/auth', authRouter);
 app.use('/product', productRouter);
 app.use('/order', orderRouter);
 app.use('/upload', uploadRouter);
+app.use((_req, _res, next) => {
+  next(new NotFoundError('Страница не найдена'));
+});
 app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
@@ -47,7 +51,7 @@ mongoose.connect(env.DB_ADDRESS)
     // eslint-disable-next-line no-console
     console.warn('MongoDB не запустился:', err.message);
   });
-app.listen(env.PORT, () => {
+app.listen(env.PORT || 3000, () => {
   // eslint-disable-next-line no-console
-  console.log(`Сервер запущен на порту ${env.PORT}`);
+  console.log(`Сервер запущен на порту ${env.PORT} || 3000`);
 });
